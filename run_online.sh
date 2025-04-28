@@ -1,11 +1,10 @@
 #!/bin/bash
 python3 online_test.py \
-	--root_path /Users/A.Gunduz/Desktop/git/Real-time-GesRec/\
-	--video_path /data2/EgoGesture/images \
-	--annotation_path annotation_EgoGesture/egogestureall.json \
-	--resume_path_det report/egogesture_resnetl_10_Depth_8_9939.pth \
-	--resume_path_clf report/egogesture_resnext_101_Depth_32_9403.pth  \
-	--result_path results \
+	--root_path "C:/Users/natai/OneDrive/Documents/Repos/Hand_AI/Real-time-GesRec" \
+	--video_path "results/videos" \
+	--annotation_path "annotation_EgoGesture/egogestureall.json" \
+	--resume_path_det "results/egogesture_resnetl_10_Depth_8_9939.pth" \
+	--resume_path_clf "results/egogesture_resnext_101_Depth_32_9403.pth" \
 	--dataset egogesture    \
 	--sample_duration_det 8 \
 	--sample_duration_clf 32 \

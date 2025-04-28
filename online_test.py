@@ -43,7 +43,7 @@ def load_models(opt):
     if opt.root_path != '':
         opt.video_path = os.path.join(opt.root_path, opt.video_path)
         opt.annotation_path = os.path.join(opt.root_path, opt.annotation_path)
-        opt.result_path = os.path.join(opt.root_path, opt.result_path)
+        # opt.result_path = os.path.join(opt.root_path, opt.result_path)
         if opt.resume_path:
             opt.resume_path = os.path.join(opt.root_path, opt.resume_path)
         if opt.pretrain_path:
@@ -56,7 +56,7 @@ def load_models(opt):
     opt.mean = get_mean(opt.norm_value)
     opt.std = get_std(opt.norm_value)
 
-    print(opt)
+    # print(opt)
     with open(os.path.join(opt.result_path, 'opts_det.json'), 'w') as opt_file:
         json.dump(vars(opt), opt_file)
 
@@ -67,15 +67,24 @@ def load_models(opt):
     if opt.resume_path:
         opt.resume_path = os.path.join(opt.root_path, opt.resume_path)
         print('loading checkpoint {}'.format(opt.resume_path))
-        checkpoint = torch.load(opt.resume_path)
+        checkpoint = torch.load(opt.resume_path, weights_only=False)
+
         #assert opt.arch == checkpoint['arch']
 
-        detector.load_state_dict(checkpoint['state_dict'])
+        # Remove 'module.' prefix from keys
+        new_state_dict = {}
+        for k, v in checkpoint['state_dict'].items():
+            name = k[7:] if k.startswith('module.') else k  # remove 'module.' prefix
+            new_state_dict[name] = v
 
-    print('Model 1 \n', detector)
+        detector.load_state_dict(new_state_dict)
+
+    print('print Model 1 disabled \n')
+    # print('Model 1 \n', detector)
     pytorch_total_params = sum(p.numel() for p in detector.parameters() if
                                p.requires_grad)
-    print("Total number of trainable parameters: ", pytorch_total_params)
+    print("model print disabled trainable parameters")
+    # print("Total number of trainable parameters: ", pytorch_total_params)
 
     opt.resume_path = opt.resume_path_clf
     opt.pretrain_path = opt.pretrain_path_clf
@@ -112,15 +121,23 @@ def load_models(opt):
 
     if opt.resume_path:
         print('loading checkpoint {}'.format(opt.resume_path))
-        checkpoint = torch.load(opt.resume_path)
-#        assert opt.arch == checkpoint['arch']
+        checkpoint = torch.load(opt.resume_path, weights_only=False)
 
-        classifier.load_state_dict(checkpoint['state_dict'])
+#       # Remove 'module.' prefix from classifier keys
+        new_state_dict = {}
+        for k, v in checkpoint['state_dict'].items():
+            name = k[7:] if k.startswith('module.') else k  # remove 'module.' prefix
+            new_state_dict[name] = v
 
-    print('Model 2 \n', classifier)
+        classifier.load_state_dict(new_state_dict)
+
+    print('print Model 2 disabled \n')
+    # print('Model 2 \n', classifier)
     pytorch_total_params = sum(p.numel() for p in classifier.parameters() if
                                p.requires_grad)
-    print("Total number of trainable parameters: ", pytorch_total_params)
+    
+    print("model print disabled trainable parameters")
+    # print("Total number of trainable parameters: ", pytorch_total_params)
 
     return detector, classifier
 
