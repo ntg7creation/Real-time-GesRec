@@ -36,6 +36,27 @@ It includes:
    pip install torch==1.8.0 torchvision==0.9.0 opencv-python
    ```
 
+4. **Download Pretrained Models**:
+
+Download the pretrained models from the following link:
+
+[Download Pretrained Models](https://drive.google.com/file/d/1rSWnzlOwGXjO_6C7U8eE6V43MlcnN6J_/view)
+
+After downloading, extract the `results` folder into the root of the project directory.
+
+Your structure should look like:
+```
+Real-time-GesRec/
+├── results/
+│   ├── egogesture_resnetl_10_Depth_8_9939.pth
+│   ├── egogesture_resnext_101_Depth_32_9403.pth
+│   └── ...
+├── extract_frames.py
+├── online_test.py
+├── run_online.sh
+└── README.md
+```
+
 ---
 
 ## 🎥 Extract Frames from Video
@@ -129,6 +150,7 @@ If unable to run `.sh` files directly on Windows, copy the commands inside `run_
 |-------------------------------|----------------------------------------------|
 | Set up environment            | Install Python 3.7 + pip install requirements |
 | Extract video frames          | `python extract_frames.py`                  |
+| Download pretrained models    | [Download models and extract `results/`](https://drive.google.com/file/d/1rSWnzlOwGXjO_6C7U8eE6V43MlcnN6J_/view) |
 | Run real-time gesture test    | `bash run_online.sh`                         |
 
 ---
