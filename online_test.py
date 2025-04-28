@@ -21,6 +21,13 @@ import numpy as np
 import datetime
 
 
+print("##############################################################################")
+print("#                                                                             #")
+print("#                                PYTHON CODE STARTING                       #")
+print("#                                                                             #")
+print("##############################################################################")
+
+
 def weighting_func(x):
     return (1 / (1 + np.exp(-0.2 * (x - 9))))
 
@@ -112,7 +119,8 @@ def load_models(opt):
     opt.mean = get_mean(opt.norm_value)
     opt.std = get_std(opt.norm_value)
 
-    print(opt)
+    print("opt disabled")
+    # print(opt)
     with open(os.path.join(opt.result_path, 'opts_clf.json'), 'w') as opt_file:
         json.dump(vars(opt), opt_file)
 
@@ -161,7 +169,8 @@ target_transform = ClassLabel()
 
 ## Get list of videos to test
 if opt.dataset == 'egogesture':
-    subject_list = ['Subject{:02d}'.format(i) for i in [2, 9, 11, 14, 18, 19, 28, 31, 41, 47]]
+    # subject_list = ['Subject{:02d}'.format(i) for i in [2, 9, 11, 14, 18, 19, 28, 31, 41, 47]]
+    subject_list = ['Subject{:02d}'.format(i) for i in [2]]
     test_paths = []
     for subject in subject_list:
         for x in glob.glob(os.path.join(opt.video_path, subject, '*/*/rgb*')):
@@ -209,7 +218,8 @@ for path in test_paths[:]:
         test_data,
         batch_size=opt.batch_size,
         shuffle=False,
-        num_workers=opt.n_threads,
+        # num_workers=opt.n_threads,
+        num_workers=0,  # <-- set to 0 here
         pin_memory=True)
 
     results = []
