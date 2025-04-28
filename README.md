@@ -105,6 +105,7 @@ Edit the `run_online.sh` script to adjust paths if necessary:
 ```
 
 If your folder structure differs, update these accordingly.
+the models egogesture_resnetl_... wont be in the results. You need to take them out from link  in the shread models and rename them to the proper name
 
 ### 2. Run the Script
 
