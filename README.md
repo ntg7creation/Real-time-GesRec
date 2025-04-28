@@ -1,106 +1,142 @@
-# Real-time Gesture Recognition (Custom Clean Version)
+# Real-time Gesture Recognition
 
-This is a cleaned and fixed version of the [Real-time-GesRec](https://github.com/ahmetgunduz/Real-time-GesRec) project, adapted for easier setup and running.
+This repository is based on [Real-time-GesRec](https://github.com/ahmetgunduz/Real-time-GesRec) with modifications for easier setup and custom usage.
 
-✅ Clean loading: Models are loaded **only once**.
-✅ No messy prints.
-✅ Compatible with CPU evaluation.
-
----
-
-## Acknowledgment
-
-This project is based on the original work by Ahmet Gunduz: [Real-time-GesRec](https://github.com/ahmetgunduz/Real-time-GesRec).
+It includes:
+- Real-time gesture detection and classification
+- Video splicer utility for frame extraction
+- Updated scripts and instructions for streamlined usage
 
 ---
 
-## Requirements
+## 📦 Setup Instructions
 
-- **Python** 3.7.9
-- **PyTorch** 1.8.0
-- **Torchvision** 0.8.1
-- **Git Bash** (recommended on Windows)
+**Requirements**:
+- Python 3.7
+- PyTorch 1.8
+- OpenCV (`opencv-python`)
 
+**Installation**:
 
-## Installation Instructions
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/ntg7creation/Real-time-GesRec.git
+   cd Real-time-GesRec
+   ```
 
-### 1. Install Python 3.7
-- Download from: [Python 3.7.9 64-bit installer](https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe)
-- During installation:
-  - Check "Add Python 3.7 to PATH"
-  - Enable `pip` installation
+2. **(Optional) Create a virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate    # Linux/Mac
+   .\venv\Scripts\activate     # Windows
+   ```
 
+3. **Install dependencies**:
+   ```bash
+   pip install torch==1.8.0 torchvision==0.9.0 opencv-python
+   ```
 
-### 2. Set up the Virtual Environment
-Open Git Bash inside your project folder.
+---
 
-```bash
-py -3.7 -m venv venv37
-source venv37/Scripts/activate
-```
+## 🎥 Extract Frames from Video
 
-✅ You should now see `(venv37)` in your prompt.
+Before running the recognition, **frames must be extracted** from your video.
 
-
-### 3. Install PyTorch and Torchvision
-Inside the activated venv:
-
-```bash
-pip install torch==1.8.0 torchvision==0.8.1
-```
-
-
-### 4. Prepare the Model Files
-- Download the pretrained models.
-- Move and rename the models into the `results/` folder:
-
-| From | To |
-|:----|:---|
-| `results/shared/egogesture_resnetl_10_Depth_8.pth` | `results/egogesture_resnetl_10_Depth_8_9939.pth` |
-| `results/shared/egogesture_resnext_101_Depth_32.pth` | `results/egogesture_resnext_101_Depth_32_9403.pth` |
-
-
-### 5. Prepare the Test Video
-Create this folder structure inside your project:
-
-```
-results/videos/Subject02/Scene1/Color/rgb1.avi
-```
-
-- Place your test `.avi` video as `rgb1.avi` in the `Color/` folder.
-
-
-### 6. (Optional) Prepare Labels
-If you want real evaluation, you must also have corresponding label CSV files:
-
-```
-results/videos/labels-final-revised1/subject02/Group01/Groupg.csv
-```
-
-Otherwise, the model will predict but cannot calculate accuracy.
-
-
-## Running the Project
-
-Activate the venv and run the evaluation:
+Use the provided `extract_frames.py` script:
 
 ```bash
-source venv37/Scripts/activate
+python extract_frames.py
+```
+
+It will ask you to provide:
+- Video file path (e.g., `Videos/my_video.mp4`)
+- Subject name (e.g., `Subject02`)
+- Group name (e.g., `Group01`)
+
+Frames will be saved in:
+```
+results/videos/{SubjectName}/{GroupName}/rgb/
+```
+
+Example:
+```
+results/videos/Subject02/Group01/rgb/rgb_00000.jpg
+```
+
+> ✅ *Use the exact folder naming format (SubjectXX/GroupXX) as expected by the model.*
+
+---
+
+## ⚙️ Running the Gesture Recognition System
+
+After extracting frames, run the detection/classification system.
+
+### 1. Update Paths (If Needed)
+
+Edit the `run_online.sh` script to adjust paths if necessary:
+
+```bash
+--root_path "./"
+--video_path "results/videos"
+--annotation_path "annotation_EgoGesture/egogestureall.json"
+--resume_path_det "results/egogesture_resnetl_10_Depth_8_9939.pth"
+--resume_path_clf "results/egogesture_resnext_101_Depth_32_9403.pth"
+```
+
+If your folder structure differs, update these accordingly.
+
+### 2. Run the Script
+
+On **Linux/macOS**:
+```bash
 bash run_online.sh
 ```
 
-✅ Models will load once, then evaluation will start cleanly.
+On **Windows** (with Git Bash or WSL installed):
+```bash
+bash run_online.sh
+```
 
-
-## Important Notes
-
-- If no valid videos are found, accuracy = 0.
-- If labels are missing, predictions can run but accuracy will not be computed.
-- FutureWarnings about `kaiming_normal` can be ignored.
-- **No training is performed**, only real-time evaluation.
-
+If unable to run `.sh` files directly on Windows, copy the commands inside `run_online.sh` and execute them manually.
 
 ---
 
-**This custom setup provides a much cleaner experience for working with Real-time Gesture Recognition.** 🚀
+## ⚠️ Important Notes
 
+- The current code processes **only Subject02** by default:
+  ```python
+  subject_list = ['Subject{:02d}'.format(i) for i in [2]]
+  ```
+  ✉️ *To use other subjects, manually edit `subject_list` in the relevant scripts.*
+
+- Pre-trained models must be placed correctly under the `results/` folder.
+
+- The detection uses **Depth modality**. Make sure your frames and settings match the expected input.
+
+---
+
+## ✨ Future Improvements
+
+- Allow dynamic subject selection instead of hardcoding `Subject02`.
+- Auto-detect relative paths in `run_online.sh`.
+- Expand to support RGB+Depth fusion.
+
+---
+
+# ✅ Quick Summary Table
+
+| Task                         | Command/Instructions                         |
+|-------------------------------|----------------------------------------------|
+| Set up environment            | Install Python 3.7 + pip install requirements |
+| Extract video frames          | `python extract_frames.py`                  |
+| Run real-time gesture test    | `bash run_online.sh`                         |
+
+---
+
+# Acknowledgement
+
+Based on the original work: [Real-time-GesRec](https://github.com/ahmetgunduz/Real-time-GesRec).
+
+---
+
+> Created and maintained by [ntg7creation](https://github.com/ntg7creation)
